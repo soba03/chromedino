@@ -32,7 +32,7 @@ public class DinoMovement : MonoBehaviour
                 Jump();
             }else{
                 _isGameStarted = true;
-                //Start moving
+                GameManager.Instance.Beginning = true;
             }
         } else if (isCrouchButtonPressed){
             //Crouch
