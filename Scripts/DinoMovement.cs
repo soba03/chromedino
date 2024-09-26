@@ -21,9 +21,9 @@ public class DinoMovement : MonoBehaviour
     void Update()
     {
         bool isJumpButtonPressed = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow);
-        bool isCrouchButtonPressed = Input.GetKeyDown(KeyCode.LeftControl) 
-                                    || Input.GetKeyDown(KeyCode.RightControl) 
-                                    || Input.GetKeyDown(KeyCode.DownArrow);
+        bool isCrouchButtonPressed = Input.GetKey(KeyCode.LeftControl) 
+                                    || Input.GetKey(KeyCode.RightControl) 
+                                    || Input.GetKey(KeyCode.DownArrow);
         
         if (isJumpButtonPressed && _isTouchingGround){
             if(_isGameStarted == true){
@@ -38,6 +38,8 @@ public class DinoMovement : MonoBehaviour
             //Crouch
 
         }
+        dinoAnimator.SetBool("Beginning", _isGameStarted);
+        dinoAnimator.SetBool("Folding", isCrouchButtonPressed && _isTouchingGround && !isJumpButtonPressed);
     }
 
     private void OnCollisionEnter2D(Collision2D other){
