@@ -9,6 +9,7 @@ public class DinoMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
 
     private bool _isGameStarted = false;
+    private bool _isTouchingGround = true;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class DinoMovement : MonoBehaviour
                                     || Input.GetKeyDown(KeyCode.RightControl) 
                                     || Input.GetKeyDown(KeyCode.DownArrow);
         
-        if (isJumpButtonPressed){
+        if (isJumpButtonPressed && _isTouchingGround){
             if(_isGameStarted == true){
                 //Jump
                 Debug.Log("Jumping...");
@@ -38,7 +39,17 @@ public class DinoMovement : MonoBehaviour
 
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D other){
+        if (other.gameObject.CompareTag("Floor")){
+            _isTouchingGround = true;
+        } else {
+            //game over
+        }
+    } 
+
     void Jump(){
         rb.AddForce(Vector2.up * jumpForce);
+        _isTouchingGround = false;
     }
 }
