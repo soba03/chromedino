@@ -635,6 +635,11 @@ MonoBehaviour:
   SFX: {fileID: 8300000, guid: 9371ce1852a31194399f696094fcddd2, type: 3}
   shieldPrefab: {fileID: 6007359466274668435, guid: 3cfac87b18821ef4fae1f7de57a8440b, type: 3}
   shieldSpawnChance: 0.21
+  letterPrefabs:
+  - {fileID: 1677764523628334847, guid: 933d13b7d4e25b84693c642016a5bc05, type: 3}
+  - {fileID: 8607316573020291251, guid: 195804600a3286f47adfc38644269cb0, type: 3}
+  - {fileID: 1253342353793021269, guid: 2bb0d97e3f2faaa4bb56ba6b40e8b37c, type: 3}
+  ticketCount: 0
 --- !u!4 &817375503
 Transform:
   m_ObjectHideFlags: 0
