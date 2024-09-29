@@ -80,8 +80,7 @@ private void Update()
         {
             timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
             
-            // Tạo chướng ngại vật
-            if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
+            if (UnityEngine.Random.value <= shieldSpawnChance)
             {
                     Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
                     GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
@@ -112,6 +111,11 @@ private void Update()
             if (allCurrentObstacles[i] != null)
             {
                 allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                if (allCurrentObstacles[i].transform.position.x < -20f) 
+                {
+                    Destroy(allCurrentObstacles[i]); 
+                    allCurrentObstacles.RemoveAt(i); 
+                }
             }
             else
             {
@@ -119,12 +123,16 @@ private void Update()
             }
         }
 
-        // Di chuyển các khiên
         for (int i = allCurrentShields.Count - 1; i >= 0; i--)
         {
             if (allCurrentShields[i] != null)
             {
                 allCurrentShields[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                if (allCurrentShields[i].transform.position.x < -20f) 
+                {
+                    Destroy(allCurrentShields[i]); 
+                    allCurrentShields.RemoveAt(i); 
+                }
             }
             else
             {

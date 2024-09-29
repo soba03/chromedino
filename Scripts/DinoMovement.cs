@@ -8,7 +8,7 @@ public class DinoMovement : MonoBehaviour
     [SerializeField] private Animator dinoAnimator;
     [SerializeField] private float jumpForce;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private GameObject shieldIcon; // Thêm biểu tượng khiên
+    [SerializeField] private GameObject shieldIcon;
 
     [Header("Audio")] 
     [SerializeField] private AudioSource audio;
@@ -51,7 +51,6 @@ public class DinoMovement : MonoBehaviour
         dinoAnimator.SetBool("Folding", isCrouchButtonPressed && _isTouchingGround && !isJumpButtonPressed);
         dinoAnimator.SetBool("Ending", _isDead);
 
-        // Hiển thị biểu tượng khiên nếu khủng long có khiên
         shieldIcon.SetActive(_hasShield);
     }
 
@@ -59,19 +58,19 @@ public class DinoMovement : MonoBehaviour
     {
         if (other.CompareTag("Shield"))
         {
-            _hasShield = true; // Kích hoạt khiên
-            Destroy(other.gameObject); // Xóa khiên khỏi màn chơi
+            _hasShield = true;
+            Destroy(other.gameObject);
         }
         else if (other.CompareTag("Obstacle"))
         {
             if (_hasShield)
             {
-                Destroy(other.gameObject); // Phá hủy chướng ngại vật
-                _hasShield = false; // Mất khiên sau va chạm
+                Destroy(other.gameObject);
+                _hasShield = false; 
             }
             else
             {
-                _isDead = true; // Khủng long chết
+                _isDead = true; 
                 GameManager.Instance.Ending = true;
                 GameManager.Instance.ShowGameEndScreen();
                 audio.clip = dieSFX;
