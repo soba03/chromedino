@@ -61,7 +61,7 @@ public class DinoMovement : MonoBehaviour
             _hasShield = true;
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Obstacle"))
+        else if (other.CompareTag("Obstacle") || other.CompareTag("BehindObstacle") )
         {
             if (_hasShield)
             {

@@ -28,14 +28,15 @@ public class GameManager : MonoBehaviour
     public float MaxtimeDelayObstacle = 1f;
     public float obstacleSpeedMultiple = 3f;
     [Space]
+    public GameObject[] allBehindGroundObstacles;
     public GameObject[] allGroundObstacles;
     public GameObject[] allFlyObstacles;
     [Space]
+    public Transform BehindGroundObstaclesSpawnPoint;
     public Transform GroundObstaclesSpawnPoint;
     public Transform FlyObstaclesSpawnPoint;
 
     private List<GameObject> allCurrentObstacles = new List<GameObject>();
-
     [Header("SPX")][SerializeField] private AudioSource audio;
     [SerializeField] private AudioClip SFX;
 
@@ -54,7 +55,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         currentSpeed = startingSpeed;
-
         if (PlayerPrefs.HasKey("HighScore"))
         {
             highScore = PlayerPrefs.GetInt("HighScore");
@@ -74,12 +74,12 @@ public class GameManager : MonoBehaviour
         {
             timeNextObstacle -= Time.deltaTime * currentSpeed;
 
-        if (timeNextObstacle <= 0)
-        {
-            timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
-            
-            if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
+            if (timeNextObstacle <= 0)
             {
+                timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
+
+                if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
+                {
                     Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
                     GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
                     allCurrentObstacles.Add(newShield);
@@ -88,11 +88,20 @@ public class GameManager : MonoBehaviour
                 {
                     if (UnityEngine.Random.value > 0.8f)
                     {
+                        // flying obstacle
                         GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
+                        allCurrentObstacles.Add(newObstacle);
+                    }
+                    else if (UnityEngine.Random.value > 0.0f)
+                    {
+                        Debug.Log("Generated a weed");
+                        // obstacle from behind
+                        GameObject newObstacle = Instantiate(allBehindGroundObstacles[UnityEngine.Random.Range(0, allBehindGroundObstacles.Length)], BehindGroundObstaclesSpawnPoint.position, Quaternion.identity);
                         allCurrentObstacles.Add(newObstacle);
                     }
                     else
                     {
+                        // catus
                         GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
                         allCurrentObstacles.Add(newObstacle);
                     }
@@ -104,22 +113,35 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-        for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
-        {
-            if (allCurrentObstacles[i] != null)
+            for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
             {
-                allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
-                if (allCurrentObstacles[i].transform.position.x < -20f) 
+                if (allCurrentObstacles[i] != null)
                 {
-                    Destroy(allCurrentObstacles[i]); 
-                    allCurrentObstacles.RemoveAt(i); 
+                    // special obstacle
+                    if (allCurrentObstacles[i].CompareTag("BehindObstacle"))
+                    {
+                        allCurrentObstacles[i].transform.Translate(new Vector3(currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                        if (allCurrentObstacles[i].transform.position.x > 20f)
+                        {
+                            Destroy(allCurrentObstacles[i]);
+                            allCurrentObstacles.RemoveAt(i);
+                        }
+                    }
+                    else
+                    {
+                        allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                        if (allCurrentObstacles[i].transform.position.x < -20f)
+                        {
+                            Destroy(allCurrentObstacles[i]);
+                            allCurrentObstacles.RemoveAt(i);
+                        }
+                    }
+                }
+                else
+                {
+                    allCurrentObstacles.RemoveAt(i);
                 }
             }
-            else
-            {
-                allCurrentObstacles.RemoveAt(i); 
-            }
-        }
 
             currentSpeed += Time.deltaTime * speedIncreasePerSecond;
             floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y: 0);

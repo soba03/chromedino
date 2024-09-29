@@ -616,25 +616,28 @@ MonoBehaviour:
   Beginning: 0
   Ending: 0
   startingSpeed: 0.2
-  speedIncreasePerSecond: 0.002
-  scoreMultiplier: 312
+  speedIncreasePerSecond: 0.01
+  scoreMultiplier: 123
   scoreText: {fileID: 239089327}
   gameEndScreen: {fileID: 808879079}
   MintimeDelayObstacle: 0.5
   MaxtimeDelayObstacle: 1
   obstacleSpeedMultiple: 25
+  allBehindGroundObstacles:
+  - {fileID: 1274003037353448515, guid: 9cb6eeb4831f6674894f3b6afcf79599, type: 3}
   allGroundObstacles:
   - {fileID: 414701944421046204, guid: 847261d3aff653a4fb42348d2f924a7c, type: 3}
   - {fileID: 2144809208888064502, guid: bd78ddf0f8c91a04590825ccfa205cc5, type: 3}
   - {fileID: 6189610299548079067, guid: 99002e288574f3d4296c407eae7821ce, type: 3}
   allFlyObstacles:
   - {fileID: 3602151694926766579, guid: 18d1297b0f86f3d4cbf6040ad86d138b, type: 3}
+  BehindGroundObstaclesSpawnPoint: {fileID: 1297780503}
   GroundObstaclesSpawnPoint: {fileID: 1454230052}
   FlyObstaclesSpawnPoint: {fileID: 1626601377}
   audio: {fileID: 0}
   SFX: {fileID: 8300000, guid: 9371ce1852a31194399f696094fcddd2, type: 3}
   shieldPrefab: {fileID: 6007359466274668435, guid: 3cfac87b18821ef4fae1f7de57a8440b, type: 3}
-  shieldSpawnChance: 0.21
+  shieldSpawnChance: 0.1
 --- !u!4 &817375503
 Transform:
   m_ObjectHideFlags: 0
@@ -649,6 +652,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1454230052}
+  - {fileID: 1297780503}
   - {fileID: 1626601377}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1129,6 +1133,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1093006625}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1297780502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1297780503}
+  m_Layer: 0
+  m_Name: BehindGroundSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1297780503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297780502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 817375503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1454230051
 GameObject:
