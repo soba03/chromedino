@@ -77,6 +77,10 @@ public class DinoMovement : MonoBehaviour
                 audio.Play();
             }
         }
+        else if (other.CompareTag("Letter"))
+        {
+            GameManager.Instance.CollectLetter(other.gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)

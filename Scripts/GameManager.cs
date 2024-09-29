@@ -14,17 +14,18 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool Beginning = false;
     [HideInInspector] public bool Ending = false;
 
-
     [Header("Speed Settings")]
 
     public float startingSpeed = 0.2f;
     public float speedIncreasePerSecond = 0.01f;
     public float scoreMultiplier = 2f;
 
-    [Header("UI")] public TextMeshProUGUI scoreText;
+    [Header("UI")]
+    public TextMeshProUGUI scoreText;
     public GameObject gameEndScreen;
 
-    [Header("Obstacle Spawn")] public float MintimeDelayObstacle = 1f;
+    [Header("Obstacle Spawn")]
+    public float MintimeDelayObstacle = 1f;
     public float MaxtimeDelayObstacle = 1f;
     public float obstacleSpeedMultiple = 3f;
     [Space]
@@ -37,7 +38,10 @@ public class GameManager : MonoBehaviour
     public Transform FlyObstaclesSpawnPoint;
 
     private List<GameObject> allCurrentObstacles = new List<GameObject>();
-    [Header("SPX")][SerializeField] private AudioSource audio;
+    private List<GameObject> allCurrentShields = new List<GameObject>();
+
+    [Header("SPX")]
+    [SerializeField] private AudioSource audio;
     [SerializeField] private AudioClip SFX;
 
     [Header("Shield Settings")]
@@ -47,20 +51,30 @@ public class GameManager : MonoBehaviour
 
     private int highScore = 0;
     private float currentScore = 0;
-
     private float timeNextObstacle = 1f;
 
+    [Header("Letter Settings")]
+    public GameObject[] letterPrefabs; 
+    private int currentLetterIndex = 0; 
+    private int ticketCount = 0; 
+
+    [Header("Ticket UI")]
+    public TextMeshProUGUI ticketText;
     private void Awake()
     {
         Instance = this;
-
         currentSpeed = startingSpeed;
         if (PlayerPrefs.HasKey("HighScore"))
         {
             highScore = PlayerPrefs.GetInt("HighScore");
         }
+        if (PlayerPrefs.HasKey("TicketCount"))
+        {
+            ticketCount = PlayerPrefs.GetInt("TicketCount");
+        }
 
         UpdateScoreUI();
+        UpdateTicketUI();
     }
 
     public void ShowGameEndScreen()
@@ -70,21 +84,27 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+    if (Beginning && !Ending)
+    {
         if (Beginning && !Ending)
         {
             timeNextObstacle -= Time.deltaTime * currentSpeed;
 
-            if (timeNextObstacle <= 0)
-            {
-                timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
+                if (timeNextObstacle <= 0)
+        {
+            timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
 
-                if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
+            bool spawnLetter = UnityEngine.Random.value <= 0.3f; 
+            
+            if (!spawnLetter) 
+            {
+                if (UnityEngine.Random.value <= shieldSpawnChance)
                 {
                     Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
                     GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
-                    allCurrentObstacles.Add(newShield);
+                    allCurrentShields.Add(newShield);
                 }
-                else if (currentScore >= 500)
+                else if (currentScore >= 50)
                 {
                     if (UnityEngine.Random.value > 0.8f)
                     {
@@ -112,6 +132,13 @@ public class GameManager : MonoBehaviour
                     allCurrentObstacles.Add(newObstacle);
                 }
             }
+            else 
+            {
+                Vector3 letterSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
+                GameObject newLetter = Instantiate(letterPrefabs[currentLetterIndex], letterSpawnPosition, Quaternion.identity);
+                allCurrentObstacles.Add(newLetter);
+            }
+        }
 
             for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
             {
@@ -142,7 +169,6 @@ public class GameManager : MonoBehaviour
                     allCurrentObstacles.RemoveAt(i);
                 }
             }
-
             currentSpeed += Time.deltaTime * speedIncreasePerSecond;
             floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y: 0);
             currentScore += currentSpeed * Time.deltaTime * scoreMultiplier;
@@ -154,8 +180,11 @@ public class GameManager : MonoBehaviour
             }
 
             UpdateScoreUI();
+            UpdateTicketUI();
         }
     }
+    }
+
     public void RestartGame()
     {
         SceneManager.LoadScene(0);
@@ -165,4 +194,28 @@ public class GameManager : MonoBehaviour
     {
         scoreText.SetText($"HI {highScore.ToString("D5")} {Mathf.RoundToInt(currentScore).ToString("D5")}");
     }
+    private void UpdateTicketUI()
+    {
+        ticketText.SetText($"{ticketCount}");
+    }
+
+    public void CollectLetter(GameObject letter)
+    {
+        if (letter.name.Contains(letterPrefabs[currentLetterIndex].name))
+        {
+            currentLetterIndex++;
+
+            if (currentLetterIndex >= letterPrefabs.Length) 
+            {
+                ticketCount++;
+                currentLetterIndex = 0; 
+                PlayerPrefs.SetInt("TicketCount", ticketCount); 
+                PlayerPrefs.Save(); 
+            }
+        }
+
+        Destroy(letter);
+    }
+
 }
+
