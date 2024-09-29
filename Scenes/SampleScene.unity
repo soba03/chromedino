@@ -616,7 +616,7 @@ MonoBehaviour:
   Beginning: 0
   Ending: 0
   startingSpeed: 0.2
-  speedIncreasePerSecond: 0.5
+  speedIncreasePerSecond: 0.002
   scoreMultiplier: 3
   scoreText: {fileID: 239089327}
   gameEndScreen: {fileID: 808879079}
@@ -633,6 +633,8 @@ MonoBehaviour:
   FlyObstaclesSpawnPoint: {fileID: 1626601377}
   audio: {fileID: 0}
   SFX: {fileID: 8300000, guid: 9371ce1852a31194399f696094fcddd2, type: 3}
+  shieldPrefab: {fileID: 6007359466274668435, guid: 3cfac87b18821ef4fae1f7de57a8440b, type: 3}
+  shieldSpawnChance: 0.21
 --- !u!4 &817375503
 Transform:
   m_ObjectHideFlags: 0
