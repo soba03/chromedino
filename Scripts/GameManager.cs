@@ -74,13 +74,12 @@ public class GameManager : MonoBehaviour
         {
             timeNextObstacle -= Time.deltaTime * currentSpeed;
 
-            if (timeNextObstacle <= 0)
+        if (timeNextObstacle <= 0)
+        {
+            timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
+            
+            if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
             {
-                timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
-
-                // Tạo chướng ngại vật
-                if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
-                {
                     Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
                     GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
                     allCurrentObstacles.Add(newShield);
@@ -105,22 +104,22 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
+        for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
+        {
+            if (allCurrentObstacles[i] != null)
             {
-                if (allCurrentObstacles[i] != null)
+                allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                if (allCurrentObstacles[i].transform.position.x < -20f) 
                 {
-                    allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
-                }
-                else
-                {
-                    allCurrentObstacles.RemoveAt(i);
-                }
-                // Destroy if out of frame
-                if (allCurrentObstacles[i].transform.position.x < -15)
-                {
-                    Destroy(allCurrentObstacles[i]);
+                    Destroy(allCurrentObstacles[i]); 
+                    allCurrentObstacles.RemoveAt(i); 
                 }
             }
+            else
+            {
+                allCurrentObstacles.RemoveAt(i); 
+            }
+        }
 
             currentSpeed += Time.deltaTime * speedIncreasePerSecond;
             floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y: 0);
