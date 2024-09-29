@@ -11,10 +11,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private MeshRenderer floorMeshRenderer;
 
-    [HideInInspector]public bool Beginning = false;
+    [HideInInspector] public bool Beginning = false;
     [HideInInspector] public bool Ending = false;
 
     [Header("Speed Settings")]
+
+    [Header("Speed Settings")]
+
     public float startingSpeed = 0.2f;
     public float speedIncreasePerSecond = 0.01f;
     public float scoreMultiplier = 2f;
@@ -78,7 +81,9 @@ public class GameManager : MonoBehaviour
     {
     if (Beginning && !Ending)
     {
-        timeNextObstacle -= Time.deltaTime * currentSpeed;
+        if (Beginning && !Ending)
+        {
+            timeNextObstacle -= Time.deltaTime * currentSpeed;
 
                 if (timeNextObstacle <= 0)
         {
@@ -179,11 +184,12 @@ public class GameManager : MonoBehaviour
             if (Mathf.RoundToInt(currentScore) > highScore)
             {
                 highScore = Mathf.RoundToInt(currentScore);
-                PlayerPrefs.SetInt("Highscore", highScore);
+                PlayerPrefs.SetInt("HighScore", highScore);
             }
 
             UpdateScoreUI();
         }
+    }
     }
 
     public void RestartGame()
@@ -213,3 +219,4 @@ public class GameManager : MonoBehaviour
         Destroy(letter);
     }
 }
+

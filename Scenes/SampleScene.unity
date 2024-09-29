@@ -617,11 +617,11 @@ MonoBehaviour:
   Ending: 0
   startingSpeed: 0.2
   speedIncreasePerSecond: 0.002
-  scoreMultiplier: 3
+  scoreMultiplier: 312
   scoreText: {fileID: 239089327}
   gameEndScreen: {fileID: 808879079}
-  MintimeDelayObstacle: 1.5
-  MaxtimeDelayObstacle: 3
+  MintimeDelayObstacle: 0.5
+  MaxtimeDelayObstacle: 1
   obstacleSpeedMultiple: 25
   allGroundObstacles:
   - {fileID: 414701944421046204, guid: 847261d3aff653a4fb42348d2f924a7c, type: 3}
@@ -1345,7 +1345,7 @@ Transform:
   m_GameObject: {fileID: 1626601376}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.11, y: 1, z: 0}
+  m_LocalPosition: {x: 16, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
