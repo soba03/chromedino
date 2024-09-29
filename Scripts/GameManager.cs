@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [Header ("Speed Settings")]
     
     public float startingSpeed = 0.2f;
-    public float speedIncreasePerSecond = 0.05f;
+    public float speedIncreasePerSecond = 0.01f;
     public float scoreMultiplier = 2f;
     
     [Header ("UI")] public TextMeshProUGUI scoreText;
@@ -35,10 +35,15 @@ public class GameManager : MonoBehaviour
     public Transform FlyObstaclesSpawnPoint;
 
     private List<GameObject> allCurrentObstacles = new List<GameObject> ();
+    private List<GameObject> allCurrentShields = new List<GameObject>(); // Danh sách quản lý các khiên
+
 
     [Header("SPX")] [SerializeField] private AudioSource audio;
     [SerializeField] private AudioClip SFX;
 
+    [Header("Shield Settings")]
+    public GameObject shieldPrefab;
+    public float shieldSpawnChance = 0.1f;
     private float currentSpeed;
 
     private int highScore = 0;
@@ -65,68 +70,81 @@ public class GameManager : MonoBehaviour
         gameEndScreen.SetActive(true);
     }
 
-    private void Update()
+private void Update()
+{
+    if (Beginning && !Ending)
     {
-        if (Beginning && !Ending)
-        {
-            timeNextObstacle -= Time.deltaTime * currentSpeed;
+        timeNextObstacle -= Time.deltaTime * currentSpeed;
 
-            if (timeNextObstacle <= 0)
+        if (timeNextObstacle <= 0)
+        {
+            timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
+            
+            // Tạo chướng ngại vật
+            if (UnityEngine.Random.value <= shieldSpawnChance) // Xác suất xuất hiện khiên
             {
-                timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
-                //spawn a new obstacle
-                if (currentScore >= 50)
+                    Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
+                    GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
+                    allCurrentShields.Add(newShield);
+            }
+            else if (currentScore >= 50)
+            {
+                if (UnityEngine.Random.value > 0.8f)
                 {
-                    //randomly spawn ground or air obstacles
-                    if (UnityEngine.Random.value > 0.8f) //20% chance happening
-                    {
-                        GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
-                        allCurrentObstacles.Add(newObstacle);
-                    }
-                    else
-                    {
-                        GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
-                        allCurrentObstacles.Add(newObstacle);
-                    }
+                    GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
+                    allCurrentObstacles.Add(newObstacle);
                 }
                 else
                 {
-                    //Randomly spawn only ground ostacles
                     GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
                     allCurrentObstacles.Add(newObstacle);
                 }
             }
-
-            foreach (GameObject _obstacle in allCurrentObstacles)
+            else
             {
-                _obstacle.transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
+                allCurrentObstacles.Add(newObstacle);
             }
-
-
-            currentSpeed += Time.deltaTime * speedIncreasePerSecond;
-            floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y:0);
-
-            //if (Mathf.RoundToInt(currentScore += currentSpeed * Time.deltaTime * scoreMultiplier) > Mathf.RoundToInt(currentScore)  && )
-            // OR
-            int lastCurrentScore = Mathf.RoundToInt(currentScore);
-
-            currentScore += currentSpeed * Time.deltaTime * scoreMultiplier;
-
-            if (Mathf.RoundToInt(currentScore) > lastCurrentScore && Mathf.RoundToInt(currentScore) % 1000 == 0)
-            {
-                audio.clip = SFX;
-                audio.Play();
-            }
-            
-            if (Mathf.RoundToInt(currentScore) > highScore)
-            {    
-                highScore = Mathf.RoundToInt(currentScore);
-                PlayerPrefs.SetInt("Highscore", highScore);
-            }
-
-            UpdateScoreUI();
         }
+
+        for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
+        {
+            if (allCurrentObstacles[i] != null)
+            {
+                allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+            }
+            else
+            {
+                allCurrentObstacles.RemoveAt(i); 
+            }
+        }
+
+        // Di chuyển các khiên
+        for (int i = allCurrentShields.Count - 1; i >= 0; i--)
+        {
+            if (allCurrentShields[i] != null)
+            {
+                allCurrentShields[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+            }
+            else
+            {
+                allCurrentShields.RemoveAt(i); 
+            }
+        }
+
+        currentSpeed += Time.deltaTime * speedIncreasePerSecond;
+        floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y:0);
+        currentScore += currentSpeed * Time.deltaTime * scoreMultiplier;
+
+        if (Mathf.RoundToInt(currentScore) > highScore)
+        {    
+            highScore = Mathf.RoundToInt(currentScore);
+            PlayerPrefs.SetInt("Highscore", highScore);
+        }
+
+        UpdateScoreUI();
     }
+}
     public void RestartGame()
     {
         SceneManager.LoadScene(0);
