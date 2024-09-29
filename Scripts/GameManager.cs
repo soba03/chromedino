@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Speed Settings")]
 
-    [Header("Speed Settings")]
-
     public float startingSpeed = 0.2f;
     public float speedIncreasePerSecond = 0.01f;
     public float scoreMultiplier = 2f;
@@ -57,8 +55,10 @@ public class GameManager : MonoBehaviour
     public GameObject[] letterPrefabs; 
     private int currentLetterIndex = 0; 
     private List<GameObject> allCurrentLetters = new List<GameObject>(); 
-    public int ticketCount = 0; 
+    private int ticketCount = 0; 
 
+    [Header("Ticket UI")]
+    public TextMeshProUGUI ticketText;
     private void Awake()
     {
         Instance = this;
@@ -68,8 +68,13 @@ public class GameManager : MonoBehaviour
         {
             highScore = PlayerPrefs.GetInt("HighScore");
         }
+        if (PlayerPrefs.HasKey("TicketCount"))
+        {
+            ticketCount = PlayerPrefs.GetInt("TicketCount");
+        }
 
         UpdateScoreUI();
+        UpdateTicketUI();
     }
 
     public void ShowGameEndScreen()
@@ -188,6 +193,7 @@ public class GameManager : MonoBehaviour
             }
 
             UpdateScoreUI();
+            UpdateTicketUI();
         }
     }
     }
@@ -201,6 +207,10 @@ public class GameManager : MonoBehaviour
     {
         scoreText.SetText($"HI {highScore.ToString("D5")} {Mathf.RoundToInt(currentScore).ToString("D5")}");
     }
+    private void UpdateTicketUI()
+    {
+        ticketText.SetText($"{ticketCount}");
+    }
 
     public void CollectLetter(GameObject letter)
     {
@@ -212,11 +222,13 @@ public class GameManager : MonoBehaviour
             {
                 ticketCount++;
                 currentLetterIndex = 0; 
-                Debug.Log("You've collected a ticket! Total tickets: " + ticketCount);
+                PlayerPrefs.SetInt("TicketCount", ticketCount); 
+                PlayerPrefs.Save(); 
             }
         }
 
         Destroy(letter);
     }
+
 }
 
