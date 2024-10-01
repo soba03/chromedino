@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Shield Settings")]
     public GameObject shieldPrefab;
-    public float shieldSpawnChance = 0.1f;
+    public float shieldSpawnChance = 0.2f;
     private float currentSpeed;
 
     private int highScore = 0;
@@ -169,6 +169,22 @@ public class GameManager : MonoBehaviour
                     allCurrentObstacles.RemoveAt(i);
                 }
             }
+                    for (int i = allCurrentShields.Count - 1; i >= 0; i--)
+        {
+            if (allCurrentShields[i] != null)
+            {
+                allCurrentShields[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                if (allCurrentShields[i].transform.position.x < -20f)
+                {
+                    Destroy(allCurrentShields[i]);
+                    allCurrentShields.RemoveAt(i);
+                }
+            }
+            else
+            {
+                allCurrentShields.RemoveAt(i); 
+            }
+        }
             currentSpeed += Time.deltaTime * speedIncreasePerSecond;
             floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y: 0);
             currentScore += currentSpeed * Time.deltaTime * scoreMultiplier;
