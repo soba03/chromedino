@@ -62,6 +62,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI ticketText;
     public Button ticketButton;
     
+    [Header("Wardrobe UI")]
+    public Button wardrobeButton;
+    public GameObject wardrobePanel; 
 
     [Header("Spin Feature")]
     public GameObject giftPanel; 
@@ -87,9 +90,11 @@ public class GameManager : MonoBehaviour
         UpdateTicketUI();
 
         giftPanel.SetActive(false);
+        wardrobePanel.SetActive(false);
 
         spinButton.onClick.AddListener(SpinGiftBox);
         ticketButton.onClick.AddListener(OnTicketButtonPressed);
+        wardrobeButton.onClick.AddListener(OnWardrobeButtonPressed);
     }
 
     public void ShowGameEndScreen()
@@ -226,13 +231,27 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnTicketButtonPressed()
+    {   
+        if (giftPanel.activeSelf)
     {
-        if (ticketCount > 0)
-        {
-            giftPanel.SetActive(true); 
-        }
+        giftPanel.SetActive(false); 
     }
-
+    else
+    {
+        giftPanel.SetActive(true);  
+    }
+    }
+    public void OnWardrobeButtonPressed()
+    {   
+        if (wardrobePanel.activeSelf)
+    {
+        wardrobePanel.SetActive(false); 
+    }
+    else
+    {
+        wardrobePanel.SetActive(true);  
+    }
+    }
     public void SpinGiftBox()
     {
         if (isSpinning || ticketCount <= 0) return; 
@@ -270,7 +289,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(ShowResult(finalIndex));
 
         isSpinning = false;
-        giftPanel.SetActive(false); 
     }
 
     private void HighlightBox(int index)
@@ -285,7 +303,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        isSpinning = false;
-        giftPanel.SetActive(false);
+        // isSpinning = false;
+        // giftPanel.SetActive(false);
     }
 }
