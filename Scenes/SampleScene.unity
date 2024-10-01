@@ -2488,8 +2488,6 @@ MonoBehaviour:
   audio: {fileID: 817375504}
   jumpSFX: {fileID: 8300000, guid: 5319f441f2d8f4549ba30c0a6a6314b0, type: 3}
   dieSFX: {fileID: 8300000, guid: 849842e9df4038641a6fc474f2ce7fd9, type: 3}
-  dinoSpriteRenderer: {fileID: 0}
-  outfitSprites: []
 --- !u!61 &1093006630
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3490,12 +3488,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outfits:
-  - {fileID: 2940716658001385737, guid: 662466368b6001b4ebf31ad054bec938, type: 3}
-  - {fileID: 8759258838215289896, guid: 47f16286d14cfba489658ca5610cffd5, type: 3}
-  - {fileID: 4182589191312841919, guid: eae5e184f5603984ba3975800cf283f3, type: 3}
-  - {fileID: 772117803239346170, guid: ca69e63d8132d80408460641ebbe3336, type: 3}
-  - {fileID: 3063749186585824370, guid: 8862fdd765a839f40a8b2d2d505fabd8, type: 3}
-  - {fileID: 6985150154213968752, guid: 136b2baaa75a29d4795fec53fd9b4aa3, type: 3}
+  - {fileID: 1715769837}
+  - {fileID: 1861261665}
+  - {fileID: 1154578545}
+  - {fileID: 1984050410}
+  - {fileID: 556629957}
+  - {fileID: 978299948}
   dino: {fileID: 1093006623}
 --- !u!4 &1501117924
 Transform:
@@ -4637,7 +4635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1997208575
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5146,6 +5144,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Image
       objectReference: {fileID: 0}
+    - target: {fileID: 6985150154213968752, guid: 136b2baaa75a29d4795fec53fd9b4aa3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5259,6 +5261,10 @@ PrefabInstance:
     - target: {fileID: 3063749186585824370, guid: 8862fdd765a839f40a8b2d2d505fabd8, type: 3}
       propertyPath: m_Name
       value: Image
+      objectReference: {fileID: 0}
+    - target: {fileID: 3063749186585824370, guid: 8862fdd765a839f40a8b2d2d505fabd8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3117678686844628968, guid: 8862fdd765a839f40a8b2d2d505fabd8, type: 3}
       propertyPath: m_Pivot.x
@@ -5534,6 +5540,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: flower
       objectReference: {fileID: 0}
+    - target: {fileID: 8759258838215289896, guid: 47f16286d14cfba489658ca5610cffd5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5550,6 +5560,10 @@ PrefabInstance:
     - target: {fileID: 2940716658001385737, guid: 662466368b6001b4ebf31ad054bec938, type: 3}
       propertyPath: m_Name
       value: Image
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940716658001385737, guid: 662466368b6001b4ebf31ad054bec938, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4003543272571205586, guid: 662466368b6001b4ebf31ad054bec938, type: 3}
       propertyPath: m_Pivot.x
@@ -5727,6 +5741,10 @@ PrefabInstance:
     - target: {fileID: 772117803239346170, guid: ca69e63d8132d80408460641ebbe3336, type: 3}
       propertyPath: m_Name
       value: hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 772117803239346170, guid: ca69e63d8132d80408460641ebbe3336, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

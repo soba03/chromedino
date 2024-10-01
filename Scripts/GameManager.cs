@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] letterPrefabs; 
     private int currentLetterIndex = 0; 
     private List<GameObject> allCurrentLetters = new List<GameObject>(); 
-    private int ticketCount = 0; 
+    private int ticketCount = 5; 
 
     [Header("Ticket UI")]
     public TextMeshProUGUI ticketText;
@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour
                     }
                     else if (UnityEngine.Random.value > 0.0f)
                     {
+                        Debug.Log("Generated a weed");
                         // obstacle from behind
                         GameObject newObstacle = Instantiate(allBehindGroundObstacles[UnityEngine.Random.Range(0, allBehindGroundObstacles.Length)], BehindGroundObstaclesSpawnPoint.position, Quaternion.identity);
                         allCurrentObstacles.Add(newObstacle);
@@ -222,61 +223,6 @@ public class GameManager : MonoBehaviour
     }
     }
 
-    private void MoveObjects(List<GameObject> objects)
-    {
-        for (int i = objects.Count - 1; i >= 0; i--)
-        {
-            if (objects[i] != null)
-            {
-                objects[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
-                if (objects[i].transform.position.x < -20f)
-                {
-                    Destroy(objects[i]);
-                    objects.RemoveAt(i);
-                }
-            }
-            else
-            {
-                objects.RemoveAt(i);
-            }
-        }
-    }
-
-    private void SpawnObstacleOrShield()
-    {
-        if (UnityEngine.Random.value <= shieldSpawnChance)
-        {
-            Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
-            GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
-            allCurrentShields.Add(newShield);
-        }
-        else if (currentScore >= 50)
-        {
-            if (UnityEngine.Random.value > 0.8f)
-            {
-                GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
-                allCurrentObstacles.Add(newObstacle);
-            }
-            else
-            {
-                GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
-                allCurrentObstacles.Add(newObstacle);
-            }
-        }
-        else
-        {
-            GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
-            allCurrentObstacles.Add(newObstacle);
-        }
-    }
-
-    private void SpawnLetter()
-    {
-        Vector3 letterSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
-        GameObject newLetter = Instantiate(letterPrefabs[currentLetterIndex], letterSpawnPosition, Quaternion.identity);
-        allCurrentLetters.Add(newLetter);
-    }
-
     public void RestartGame()
     {
         SceneManager.LoadScene(0);
@@ -332,45 +278,32 @@ public class GameManager : MonoBehaviour
         wardrobePanel.SetActive(true);  
     }
     }
-    public void SpinGiftBox()
+    private void SpinGiftBox()
     {
-        if (isSpinning || ticketCount <= 0) return; 
+        if (isSpinning || ticketCount <= 0) return;
         isSpinning = true;
-
         ticketCount--;
         UpdateTicketUI();
-        PlayerPrefs.SetInt("TicketCount", ticketCount); 
-        PlayerPrefs.Save(); 
-
-        int randomIndex = UnityEngine.Random.Range(0, giftBoxes.Length);
-    
-        StartCoroutine(SpinEffect(randomIndex));
+        PlayerPrefs.SetInt("TicketCount", ticketCount);
+        PlayerPrefs.Save();
+        StartCoroutine(SpinEffect(UnityEngine.Random.Range(0, giftBoxes.Length)));
     }
+
     private IEnumerator SpinEffect(int finalIndex)
     {
-        int currentBoxIndex = 0;
-        int totalRounds = 3; 
-        int totalBoxes = giftBoxes.Length;
+        int currentBoxIndex = 0, totalRounds = 3, totalBoxes = giftBoxes.Length;
 
         for (int i = 0; i < totalRounds * totalBoxes + finalIndex; i++)
         {
             ResetBoxHighlight(currentBoxIndex);
-
             currentBoxIndex = i % totalBoxes;
-
             HighlightBox(currentBoxIndex);
-
-            float delay = Mathf.Lerp(0.1f, 0.5f, (float)i / (totalRounds * totalBoxes + finalIndex));
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(Mathf.Lerp(0.1f, 0.5f, (float)i / (totalRounds * totalBoxes + finalIndex)));
         }
 
-        Debug.Log($"Hộp quà số {finalIndex} đã được chọn!");
-
         StartCoroutine(ShowResult(finalIndex));
-
         isSpinning = false;
     }
-
     private void HighlightBox(int index)
     {
         giftBoxes[index].transform.localScale = Vector3.one * 1.2f; 
@@ -379,11 +312,28 @@ public class GameManager : MonoBehaviour
     {
         giftBoxes[index].transform.localScale = Vector3.one; 
     }
-    private IEnumerator ShowResult(int randomIndex)
+    private IEnumerator ShowResult(int finalIndex)
     {
         yield return new WaitForSeconds(3f);
-
-        // isSpinning = false;
-        // giftPanel.SetActive(false);
+        switch (finalIndex)
+        {
+            case 1: UnlockWardrobeButton(1); break;
+            case 2: UnlockWardrobeButton(5); break;
+            case 3: ShowNoRewardMessage(); break;
+            case 4: UnlockWardrobeButton(3); break;
+            case 5: ShowNoRewardMessage(); break;
+            case 6: UnlockWardrobeButton(2); break;
+            case 7: UnlockWardrobeButton(4); break;
+            case 8: UnlockWardrobeButton(0); break;
+            case 9: ShowNoRewardMessage(); break;
+            default: Debug.LogError("Invalid finalIndex!"); break;
+        }
     }
+
+    private void UnlockWardrobeButton(int buttonIndex)
+    {   
+        WardrobeManager.Instance.UnlockOutfit(buttonIndex);
+    }
+
+    private void ShowNoRewardMessage() => Debug.Log("No reward this time.");
 }
