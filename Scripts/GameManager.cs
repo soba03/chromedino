@@ -136,7 +136,6 @@ public class GameManager : MonoBehaviour
                     }
                     else if (UnityEngine.Random.value > 0.0f)
                     {
-                        Debug.Log("Generated a weed");
                         // obstacle from behind
                         GameObject newObstacle = Instantiate(allBehindGroundObstacles[UnityEngine.Random.Range(0, allBehindGroundObstacles.Length)], BehindGroundObstaclesSpawnPoint.position, Quaternion.identity);
                         allCurrentObstacles.Add(newObstacle);

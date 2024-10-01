@@ -15,6 +15,11 @@ public class DinoMovement : MonoBehaviour
     [SerializeField] private AudioClip jumpSFX;
     [SerializeField] private AudioClip dieSFX;
 
+    [SerializeField] private SpriteRenderer dinoSpriteRenderer; 
+    public Sprite[] outfitSprites; 
+
+    private int currentOutfitIndex = -1;
+
     private bool _isGameStarted = false;
     private bool _isTouchingGround = true;
     private bool _isDead = false;
@@ -97,5 +102,24 @@ public class DinoMovement : MonoBehaviour
         _isTouchingGround = false;
         audio.clip = jumpSFX;
         audio.Play();
+    }
+    public void WearOutfit(int outfitIndex)
+    {
+        if (currentOutfitIndex != -1)
+        {
+            // Nếu có trang phục cũ, thay đổi sang trang phục mới
+            dinoSpriteRenderer.sprite = outfitSprites[outfitIndex];
+        }
+
+        currentOutfitIndex = outfitIndex; // Cập nhật trạng thái trang phục hiện tại
+    }
+
+    public void RemoveCurrentOutfit()
+    {
+        if (currentOutfitIndex != -1)
+        {
+            dinoSpriteRenderer.sprite = null; // Bỏ trang phục hiện tại
+            currentOutfitIndex = -1; // Reset về không có trang phục nào được mặc
+        }
     }
 }
