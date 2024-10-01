@@ -30,9 +30,11 @@ public class GameManager : MonoBehaviour
     public float MaxtimeDelayObstacle = 1f;
     public float obstacleSpeedMultiple = 3f;
     [Space]
+    public GameObject[] allBehindGroundObstacles;
     public GameObject[] allGroundObstacles;
     public GameObject[] allFlyObstacles;
     [Space]
+    public Transform BehindGroundObstaclesSpawnPoint;
     public Transform GroundObstaclesSpawnPoint;
     public Transform FlyObstaclesSpawnPoint;
 
@@ -104,29 +106,107 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+    if (Beginning && !Ending)
+    {
         if (Beginning && !Ending)
         {
             timeNextObstacle -= Time.deltaTime * currentSpeed;
 
-            if (timeNextObstacle <= 0)
-            {
-                timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
-                bool spawnLetter = UnityEngine.Random.value <= 0.3f; 
+                if (timeNextObstacle <= 0)
+        {
+            timeNextObstacle = UnityEngine.Random.Range(MintimeDelayObstacle, MaxtimeDelayObstacle);
 
-                if (!spawnLetter) 
+            bool spawnLetter = UnityEngine.Random.value <= 0.3f; 
+            
+            if (!spawnLetter) 
+            {
+                if (UnityEngine.Random.value <= shieldSpawnChance)
                 {
-                    SpawnObstacleOrShield();
+                    Vector3 shieldSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
+                    GameObject newShield = Instantiate(shieldPrefab, shieldSpawnPosition, Quaternion.identity);
+                    allCurrentShields.Add(newShield);
                 }
-                else 
+                else if (currentScore >= 50)
                 {
-                    SpawnLetter();
+                    if (UnityEngine.Random.value > 0.8f)
+                    {
+                        // flying obstacle
+                        GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
+                        allCurrentObstacles.Add(newObstacle);
+                    }
+                    else if (UnityEngine.Random.value > 0.0f)
+                    {
+                        Debug.Log("Generated a weed");
+                        // obstacle from behind
+                        GameObject newObstacle = Instantiate(allBehindGroundObstacles[UnityEngine.Random.Range(0, allBehindGroundObstacles.Length)], BehindGroundObstaclesSpawnPoint.position, Quaternion.identity);
+                        allCurrentObstacles.Add(newObstacle);
+                    }
+                    else
+                    {
+                        // catus
+                        GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
+                        allCurrentObstacles.Add(newObstacle);
+                    }
+                }
+                else
+                {
+                    GameObject newObstacle = Instantiate(allGroundObstacles[UnityEngine.Random.Range(0, allGroundObstacles.Length)], GroundObstaclesSpawnPoint.position, Quaternion.identity);
+                    allCurrentObstacles.Add(newObstacle);
                 }
             }
+            else 
+            {
+                Vector3 letterSpawnPosition = GroundObstaclesSpawnPoint.position + new Vector3(0, 2f, 0);
+                GameObject newLetter = Instantiate(letterPrefabs[currentLetterIndex], letterSpawnPosition, Quaternion.identity);
+                allCurrentObstacles.Add(newLetter);
+            }
+        }
 
-            MoveObjects(allCurrentObstacles);
-            MoveObjects(allCurrentShields);
-            MoveObjects(allCurrentLetters);
-
+            for (int i = allCurrentObstacles.Count - 1; i >= 0; i--)
+            {
+                if (allCurrentObstacles[i] != null)
+                {
+                    // special obstacle
+                    if (allCurrentObstacles[i].CompareTag("BehindObstacle"))
+                    {
+                        allCurrentObstacles[i].transform.Translate(new Vector3(currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                        if (allCurrentObstacles[i].transform.position.x > 20f)
+                        {
+                            Destroy(allCurrentObstacles[i]);
+                            allCurrentObstacles.RemoveAt(i);
+                        }
+                    }
+                    else
+                    {
+                        allCurrentObstacles[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                        if (allCurrentObstacles[i].transform.position.x < -20f)
+                        {
+                            Destroy(allCurrentObstacles[i]);
+                            allCurrentObstacles.RemoveAt(i);
+                        }
+                    }
+                }
+                else
+                {
+                    allCurrentObstacles.RemoveAt(i);
+                }
+            }
+                    for (int i = allCurrentShields.Count - 1; i >= 0; i--)
+        {
+            if (allCurrentShields[i] != null)
+            {
+                allCurrentShields[i].transform.Translate(new Vector3(-currentSpeed * Time.deltaTime * obstacleSpeedMultiple, 0, 0));
+                if (allCurrentShields[i].transform.position.x < -20f)
+                {
+                    Destroy(allCurrentShields[i]);
+                    allCurrentShields.RemoveAt(i);
+                }
+            }
+            else
+            {
+                allCurrentShields.RemoveAt(i); 
+            }
+        }
             currentSpeed += Time.deltaTime * speedIncreasePerSecond;
             floorMeshRenderer.material.mainTextureOffset += new Vector2(currentSpeed * Time.deltaTime, y: 0);
             currentScore += currentSpeed * Time.deltaTime * scoreMultiplier;
@@ -140,6 +220,7 @@ public class GameManager : MonoBehaviour
             UpdateScoreUI();
             UpdateTicketUI();
         }
+    }
     }
 
     private void MoveObjects(List<GameObject> objects)

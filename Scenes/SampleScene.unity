@@ -1449,12 +1449,15 @@ MonoBehaviour:
   MintimeDelayObstacle: 0.5
   MaxtimeDelayObstacle: 1
   obstacleSpeedMultiple: 25
+  allBehindGroundObstacles:
+  - {fileID: 1274003037353448515, guid: 9cb6eeb4831f6674894f3b6afcf79599, type: 3}
   allGroundObstacles:
   - {fileID: 414701944421046204, guid: 847261d3aff653a4fb42348d2f924a7c, type: 3}
   - {fileID: 2144809208888064502, guid: bd78ddf0f8c91a04590825ccfa205cc5, type: 3}
   - {fileID: 6189610299548079067, guid: 99002e288574f3d4296c407eae7821ce, type: 3}
   allFlyObstacles:
   - {fileID: 3602151694926766579, guid: 18d1297b0f86f3d4cbf6040ad86d138b, type: 3}
+  BehindGroundObstaclesSpawnPoint: {fileID: 1297780503}
   GroundObstaclesSpawnPoint: {fileID: 1454230052}
   FlyObstaclesSpawnPoint: {fileID: 1626601377}
   audio: {fileID: 0}
