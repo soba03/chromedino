@@ -63,6 +63,10 @@ public class GameManager : MonoBehaviour
     [Header("Ticket UI")]
     public TextMeshProUGUI ticketText;
     public Button ticketButton;
+        
+    [Header("Menu UI")]
+    public GameObject menuPanel;
+    public Button menuButton;
     
     [Header("Wardrobe UI")]
     public Button wardrobeButton;
@@ -93,10 +97,13 @@ public class GameManager : MonoBehaviour
 
         giftPanel.SetActive(false);
         wardrobePanel.SetActive(false);
+        menuPanel.SetActive(true); 
+        Debug.Log("Menu Active");
 
         spinButton.onClick.AddListener(SpinGiftBox);
         ticketButton.onClick.AddListener(OnTicketButtonPressed);
         wardrobeButton.onClick.AddListener(OnWardrobeButtonPressed);
+        menuButton.onClick.AddListener(OnMenuButtonPressed);
     }
 
     public void ShowGameEndScreen()
@@ -279,6 +286,19 @@ public class GameManager : MonoBehaviour
     else
     {
         wardrobePanel.SetActive(true);  
+    }
+    }
+    public void OnMenuButtonPressed()
+    {   
+        if (menuPanel.activeSelf)
+    {
+        menuPanel.SetActive(false); 
+        Debug.Log("Menu Deactive");
+
+    }
+    else
+    {
+        menuPanel.SetActive(true);  
     }
     }
     private void SpinGiftBox()
