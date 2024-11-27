@@ -74,11 +74,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] giftBoxes; 
     private bool isSpinning = false; 
 
-    private float elapsedTime  = 0.0f;
     private void Awake()
     {
-        StartCoroutine(LogTimeCoroutine());
-
         Instance = this;
         currentSpeed = startingSpeed;
 
@@ -102,23 +99,16 @@ public class GameManager : MonoBehaviour
         wardrobeButton.onClick.AddListener(OnWardrobeButtonPressed);
     }
 
-    System.Collections.IEnumerator LogTimeCoroutine()
-    {
-        while (true) // Infinite loop to keep logging time
-        {
-            Debug.Log("Time spent on screen: " + (int)elapsedTime + " seconds");
-            yield return new WaitForSeconds(5f); // Wait for 5 seconds
-        }
-    }
     public void ShowGameEndScreen()
     {
         gameEndScreen.SetActive(true);
+        Debug.Log("Lose");
+        Ending = true; // Mark the game as ending
     }
+
 
     private void Update()
     {
-        elapsedTime += Time.deltaTime;
-
     if (Beginning && !Ending)
     {
         if (Beginning && !Ending)
@@ -141,7 +131,7 @@ public class GameManager : MonoBehaviour
                 }
                 else if (currentScore >= 50)
                 {
-                    if (UnityEngine.Random.value > 1.0f)
+                    if (UnityEngine.Random.value > 0.8f)
                     {
                         // flying obstacle
                         GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
