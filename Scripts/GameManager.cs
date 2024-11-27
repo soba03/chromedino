@@ -102,7 +102,10 @@ public class GameManager : MonoBehaviour
     public void ShowGameEndScreen()
     {
         gameEndScreen.SetActive(true);
+        Debug.Log("Lose");
+        Ending = true; // Mark the game as ending
     }
+
 
     private void Update()
     {
