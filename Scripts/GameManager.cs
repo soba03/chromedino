@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
                 }
                 else if (currentScore >= 50)
                 {
-                    if (UnityEngine.Random.value > 0.8f)
+                    if (UnityEngine.Random.value > 1.0f)
                     {
                         // flying obstacle
                         GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
