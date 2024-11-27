@@ -1766,7 +1766,7 @@ MonoBehaviour:
   Beginning: 0
   Ending: 0
   startingSpeed: 0.2
-  speedIncreasePerSecond: 0.01
+  speedIncreasePerSecond: 0.0005
   scoreMultiplier: 123
   scoreText: {fileID: 239089327}
   gameEndScreen: {fileID: 808879079}

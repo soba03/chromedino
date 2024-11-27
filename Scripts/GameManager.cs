@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
                         GameObject newObstacle = Instantiate(allFlyObstacles[UnityEngine.Random.Range(0, allFlyObstacles.Length)], FlyObstaclesSpawnPoint.position, Quaternion.identity);
                         allCurrentObstacles.Add(newObstacle);
                     }
-                    else if (UnityEngine.Random.value > 0.0f)
+                    else if (UnityEngine.Random.value > 0.8f)
                     {
                         Debug.Log("Generated a weed");
                         // obstacle from behind
@@ -325,8 +325,8 @@ public class GameManager : MonoBehaviour
             case 6: UnlockWardrobeButton(2); break;
             case 7: UnlockWardrobeButton(4); break;
             case 8: UnlockWardrobeButton(0); break;
-            case 9: ShowNoRewardMessage(); break;
-            default: Debug.LogError("Invalid finalIndex!"); break;
+            case 0: ShowNoRewardMessage(); break;
+            default: Debug.LogError($"Invalid finalIndex: {finalIndex}!"); break;
         }
     }
 
