@@ -74,8 +74,11 @@ public class GameManager : MonoBehaviour
     public GameObject[] giftBoxes; 
     private bool isSpinning = false; 
 
+    private float elapsedTime  = 0.0f;
     private void Awake()
     {
+        StartCoroutine(LogTimeCoroutine());
+
         Instance = this;
         currentSpeed = startingSpeed;
 
@@ -99,6 +102,14 @@ public class GameManager : MonoBehaviour
         wardrobeButton.onClick.AddListener(OnWardrobeButtonPressed);
     }
 
+    System.Collections.IEnumerator LogTimeCoroutine()
+    {
+        while (true) // Infinite loop to keep logging time
+        {
+            Debug.Log("Time spent on screen: " + (int)elapsedTime + " seconds");
+            yield return new WaitForSeconds(5f); // Wait for 5 seconds
+        }
+    }
     public void ShowGameEndScreen()
     {
         gameEndScreen.SetActive(true);
@@ -106,6 +117,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        elapsedTime += Time.deltaTime;
+
     if (Beginning && !Ending)
     {
         if (Beginning && !Ending)
